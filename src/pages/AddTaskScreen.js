@@ -5,6 +5,9 @@ const AddTaskScreen = ({ navigation, route }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
+
+
+
   const onSave = () => {
     if (title.trim() === '') {
       alert('Por favor, insira um título para a tarefa.');
