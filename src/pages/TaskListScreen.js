@@ -1,19 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text, Button, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, Button, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 
 const TaskListScreen = ({ navigation }) => {
   const [tasks, setTasks] = useState([
-    { id: '1', title: 'Tarefa 1', description: 'Descrição da Tarefa 1', status: 'pendente' },
-    // ... outras tarefas
+    { id: '1', title: 'test1', description: 'ffff', status: 'PEDNDENTE' },
   ]);
   
-
   const addTask = () => {
     navigation.navigate('AddTask', { onSave: saveTask });
   };
 
   const saveTask = (title, description) => {
-    setTasks(prevTasks => [...prevTasks, { id: Math.random().toString(), title, description, status: 'pendente' }]);
+    setTasks(prevTasks => [...prevTasks, { id: Math.random().toString(), title, description, status: 'PENDENTE' }]);
     navigation.goBack();
   };
 
@@ -24,7 +22,7 @@ const TaskListScreen = ({ navigation }) => {
   const toggleStatus = taskId => {
     setTasks(prevTasks =>
       prevTasks.map(task =>
-        task.id === taskId ? { ...task, status: task.status === 'pendente' ? 'concluído' : 'pendente' } : task
+        task.id === taskId ? { ...task, status: task.status === 'PENDENTE' ? 'CONCLUIDO' : 'PENDENTE' } : task
       )
     );
   };
@@ -34,29 +32,66 @@ const TaskListScreen = ({ navigation }) => {
   };
 
   const renderItem = ({ item }) => (
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
-      <TouchableOpacity onPress={() => navigateToTaskDetails(item)}>
-        <Text>{item.title}</Text>
-        <Text>{item.description}</Text>
+    <View style={styles.itemContainer}>
+      <TouchableOpacity onPress={() => navigateToTaskDetails(item)} style={styles.itemTouch}>
+        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.description}>{item.description}</Text>
       </TouchableOpacity>
-      <View style={{ flexDirection: 'row' }}>
-        <Text>Status: {item.status}</Text>
+      <View style={styles.buttonContainer}>
+        <Text style={styles.status}>Status: {item.status}</Text>
         <Button title="Alterar Status" onPress={() => toggleStatus(item.id)} />
-        <Button title="Excluir" onPress={() => removeTask(item.id)} />
+        <Button title="Excluir" onPress={() => removeTask(item.id)} color="red" />
       </View>
     </View>
   );
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <FlatList
         data={tasks}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.id.toString()}
         renderItem={renderItem}
       />
       <Button title="Adicionar Tarefa" onPress={addTask} />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 10
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    marginBottom: 5
+  },
+  itemTouch: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000'
+  },
+  description: {
+    fontSize: 14,
+    color: '#000'
+  },
+  buttonContainer: {
+    alignItems: 'center'
+  },
+  status: {
+    marginRight: 10
+  },
+  button: {
+    borderRadius: 100
+  }
+});
 
 export default TaskListScreen;
